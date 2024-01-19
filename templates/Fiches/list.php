@@ -12,25 +12,27 @@
             <thead>
                 <tr>
                     <th><?= $this->Paginator->sort('id') ?></th>
-                    <th><?= $this->Paginator->sort('user_id') ?></th>
+                    <th><?= $this->Paginator->sort('nbJustificatif') ?></th>
+                    <th><?= $this->Paginator->sort('montantValide') ?></th>
+                    <th><?= $this->Paginator->sort('dateModif') ?></th>
+                    <th><?= $this->Paginator->sort('mois') ?></th>
+                    <th><?= $this->Paginator->sort('annee') ?></th>
                     <th><?= $this->Paginator->sort('etat_id') ?></th>
-                    <th><?= $this->Paginator->sort('moisannee') ?></th>
-                    <th><?= $this->Paginator->sort('nbjustificatifs') ?></th>
-                    <th><?= $this->Paginator->sort('montantvalide') ?></th>
-                    <th><?= $this->Paginator->sort('datemodif') ?></th>
+                    <th><?= $this->Paginator->sort('user_id') ?></th>
                     <th class="actions"><?= __('Actions') ?></th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($list as $fich): ?>
+                <?php foreach ($fiches as $fich): ?>
                 <tr>
                     <td><?= $this->Number->format($fich->id) ?></td>
+                    <td><?= $this->Number->format($fich->nbJustificatif) ?></td>
+                    <td><?= $this->Number->format($fich->montantValide) ?></td>
+                    <td><?= h($fich->dateModif) ?></td>
+                    <td><?= h($fich->mois) ?></td>
+                    <td><?= $this->Number->format($fich->annee) ?></td>
+                    <td><?= $fich->has('etat') ? $this->Html->link($fich->etat->libelle, ['controller' => 'Etat', 'action' => 'view', $fich->etat->id]) : '' ?></td>
                     <td><?= $fich->has('user') ? $this->Html->link($fich->user->username, ['controller' => 'Users', 'action' => 'view', $fich->user->id]) : '' ?></td>
-                    <td><?= $fich->has('etat') ? $this->Html->link($fich->etat->etat, ['controller' => 'Etats', 'action' => 'view', $fich->etat->id]) : '' ?></td>
-                    <td><?= h($fich->moisannee) ?></td>
-                    <td><?= h($fich->nbjustificatifs) ?></td>
-                    <td><?= h($fich->montantvalide) ?></td>
-                    <td><?= h($fich->datemodif) ?></td>
                     <td class="actions">
                         <?= $this->Html->link(__('View'), ['action' => 'view', $fich->id]) ?>
                         <?= $this->Html->link(__('Edit'), ['action' => 'edit', $fich->id]) ?>
@@ -51,4 +53,9 @@
         </ul>
         <p><?= $this->Paginator->counter(__('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')) ?></p>
     </div>
+</div>
+
+
+<div>
+    <h3>Mes Fiches</h3>
 </div>

@@ -17,11 +17,20 @@ class FichesController extends AppController
      *
      * @return \Cake\Http\Response|null|void Renders view
      */
-    public function index()
-    {
+    public function index($id=null){
+        $identity = $this->getRequest()->getAttribute('identity');
+        $identity = $identity ?? [];
+        $iduser = $identity["id"];
+        $username = $identity["username"];
+        $list = $this->Fiches->find('all', ['conditions' => ['user_id' => $iduser]])->contain(['Etats', 'Users']); //Le contain permet de charger le nom d'user et l'etat
+
+
+        $this->set('list', $list);
+
         $this->set('showHeader', true);
+
         $this->paginate = [
-            'contain' => ['Users', 'Etats'],
+            'contain' => ['Etats', 'Users'],
         ];
         $fiches = $this->paginate($this->Fiches);
 
@@ -115,5 +124,21 @@ class FichesController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+
+    public function list()
+    {
+        $identity = $this->getRequest()->getAttribute('identity');
+        $identity = $identity ?? [];
+        $iduser = $identity["id"];
+
+        $this->set('showHeader', true);
+
+        $this->paginate = [
+            'contain' => ['Etat', 'Users'],
+        ];
+        $fiches = $this->paginate($this->Fiches);
+
+        $this->set(compact('fiches'));
     }
 }
