@@ -23,10 +23,6 @@
                     <td><?= h($lignefraishf->montant) ?></td>
                 </tr>
                 <tr>
-                    <th><?= __('Fraishf') ?></th>
-                    <td><?= h($lignefraishf->fraishf) ?></td>
-                </tr>
-                <tr>
                     <th><?= __('Id') ?></th>
                     <td><?= $this->Number->format($lignefraishf->id) ?></td>
                 </tr>

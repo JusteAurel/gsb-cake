@@ -14,6 +14,7 @@
                     <th><?= $this->Paginator->sort('id') ?></th>
                     <th><?= $this->Paginator->sort('fraisforfait_id') ?></th>
                     <th><?= $this->Paginator->sort('quantite') ?></th>
+                    <th><?= $this ->Paginator->sort('montant') ?></th>
                     <th class="actions"><?= __('Actions') ?></th>
                 </tr>
             </thead>
@@ -21,8 +22,9 @@
                 <?php foreach ($lignefraisforfaits as $lignefraisforfait): ?>
                 <tr>
                     <td><?= $this->Number->format($lignefraisforfait->id) ?></td>
-                    <td><?= $lignefraisforfait->has('fraisforfait') ? $this->Html->link($lignefraisforfait->fraisforfait->montant, ['controller' => 'Fraisforfaits', 'action' => 'view', $lignefraisforfait->fraisforfait->id]) : '' ?></td>
+                    <td><?= $lignefraisforfait->has('fraisforfait') ? $this->Html->link($lignefraisforfait->fraisforfait->id, ['controller' => 'Fraisforfaits', 'action' => 'view', $lignefraisforfait->fraisforfait->id]) : '' ?></td>
                     <td><?= h($lignefraisforfait->quantite) ?></td>
+                    <td><?= h($lignefraisforfait-> fraisforfait ->montant) ?></td>
                     <td class="actions">
                         <?= $this->Html->link(__('View'), ['action' => 'view', $lignefraisforfait->id]) ?>
                         <?= $this->Html->link(__('Edit'), ['action' => 'edit', $lignefraisforfait->id]) ?>

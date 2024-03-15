@@ -70,10 +70,9 @@ class LignefraishfsTable extends Table
             ->notEmptyString('montant');
 
         $validator
-            ->scalar('fraishf')
-            ->maxLength('fraishf', 250)
-            ->requirePresence('fraishf', 'create')
-            ->notEmptyString('fraishf');
+            ->scalar('label')
+            ->requirePresence('label', 'create')
+            ->notEmptyString('label');
 
         return $validator;
     }

@@ -7,6 +7,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Phinx\Db\Table\ForeignKey;
 
 
 
@@ -64,6 +65,7 @@ class FichesTable extends Table
             'foreignKey' => 'fiche_id',
             'targetForeignKey' => 'lignefraisforfait_id',
             'joinTable' => 'fiches_lignefraisforfaits',
+            'className' => 'Lignefraisforfaits',
         ]);
         $this->belongsToMany('Lignefraishfs', [
             'foreignKey' => 'fiche_id',
@@ -93,12 +95,6 @@ class FichesTable extends Table
             ->maxLength('moisannee', 100)
             ->requirePresence('moisannee', 'create')
             ->notEmptyString('moisannee');
-
-        $validator
-            ->scalar('nbjustificatifs')
-            ->maxLength('nbjustificatifs', 150)
-            ->requirePresence('nbjustificatifs', 'create')
-            ->notEmptyString('nbjustificatifs');
 
         $validator
             ->scalar('montantvalide')

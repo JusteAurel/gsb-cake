@@ -52,14 +52,30 @@ class LignefraishfsController extends AppController
         if ($this->request->is('post')) {
             $lignefraishf = $this->Lignefraishfs->patchEntity($lignefraishf, $this->request->getData());
             if ($this->Lignefraishfs->save($lignefraishf)) {
-                $this->Flash->success(__('The lignefraishf has been saved.'));
+                $this->Flash->success(__('Fiche de frais correctement créée'));
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('The lignefraishf could not be saved. Please, try again.'));
+            $this->Flash->error(__("La fiche de frais n'a pas pu être créée. Veuillez réessayer !"));
         }
         $fiches = $this->Lignefraishfs->Fiches->find('list', ['limit' => 200])->all();
         $this->set(compact('lignefraishf', 'fiches'));
+    }
+
+    public function create($id=null, $idfiche = null)
+    {
+        $lignefraishf = $this->Lignefraishfs->newEmptyEntity();
+        if ($this->request->is('post')) {
+            $lignefraishf = $this->Lignefraishfs->patchEntity($lignefraishf, $this->request->getData());
+            if ($this->Lignefraishfs->save($lignefraishf)) {
+                $this->Flash->success(__('Fiche de frais correctement créée'));
+
+                return $this->redirect(['controller'=>'Fiches','action' => 'view', $idfiche]);
+            }
+            $this->Flash->error(__("La fiche de frais n'a pas pu être créée. Veuillez réessayer !"));
+        }
+        $fiches = $this->Lignefraishfs->Fiches->find('list', ['limit' => 200])->all();
+        $this->set(compact('lignefraishf', 'fiches', 'id'));
     }
 
     /**
@@ -69,22 +85,33 @@ class LignefraishfsController extends AppController
      * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function edit($id = null)
+    public function edit($id = null, $idfiche = null,$idetat = null)
     {   
-        $lignefraishf = $this->Lignefraishfs->get($id, [
-            'contain' => ['Fiches'],
-        ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $lignefraishf = $this->Lignefraishfs->patchEntity($lignefraishf, $this->request->getData());
-            if ($this->Lignefraishfs->save($lignefraishf)) {
-                $this->Flash->success(__('The lignefraishf has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
+        if ($idetat == 1) {
+            $lignefraishf = $this->Lignefraishfs->get($id, [
+                'contain' => ['Fiches'],
+            ]);
+            if ($this->request->is(['patch', 'post', 'put'])) {
+                $lignefraishf = $this->Lignefraishfs->patchEntity($lignefraishf, $this->request->getData());
+                if ($this->Lignefraishfs->save($lignefraishf)) {
+                    $this->Flash->success(__('Fiche de frais correctement enregistrée'));
+    
+                    return $this->redirect(['controller'=>'Fiches','action' => 'view', $idfiche]);
+                }
+                $this->Flash->error(__("La fiche de frais n'a pas pu être enregistrée. Veuillez réessayer !"));
             }
-            $this->Flash->error(__('The lignefraishf could not be saved. Please, try again.'));
+            $fiches = $this->Lignefraishfs->Fiches->find('list', ['limit' => 200])->all();
+            $this->set(compact('lignefraishf', 'fiches', 'idfiche'));
         }
-        $fiches = $this->Lignefraishfs->Fiches->find('list', ['limit' => 200])->all();
-        $this->set(compact('lignefraishf', 'fiches'));
+        else {
+            $this->Flash->error(__("Impossible de modifier une fiche cloturée !"));
+            if ($idfiche == null) {
+                return $this->redirect(['controller'=>'Fiches','action' => 'index']);
+            }
+            else {
+                return $this->redirect(['controller'=>'Fiches','action' => 'view', $idfiche]);
+            }
+        }
     }
 
     /**
@@ -94,16 +121,27 @@ class LignefraishfsController extends AppController
      * @return \Cake\Http\Response|null|void Redirects to index.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function delete($id = null)
+    public function delete($id = null, $idfiche = null, $idetat = null)
     {
-        $this->request->allowMethod(['post', 'delete']);
-        $lignefraishf = $this->Lignefraishfs->get($id);
-        if ($this->Lignefraishfs->delete($lignefraishf)) {
-            $this->Flash->success(__('The lignefraishf has been deleted.'));
-        } else {
-            $this->Flash->error(__('The lignefraishf could not be deleted. Please, try again.'));
-        }
+        if ($idetat == 1) {
+            $this->request->allowMethod(['post', 'delete']);
+            $lignefraishf = $this->Lignefraishfs->get($id);
+            if ($this->Lignefraishfs->delete($lignefraishf)) {
+                $this->Flash->success(__('Fiche de frais supprimée'));
+            } else {
+                $this->Flash->error(__("La fiche de frais n'a pas pu être supprimée. Veuillez réessayer !"));
+            }
 
-        return $this->redirect(['action' => 'index']);
+            return $this->redirect(['controller'=>'Fiches', 'action' => 'view', $idfiche]);
+        }
+        else {
+            $this->Flash->error(__("Impossible de supprimer des frais sur une fiche cloturée !"));
+            if ($idfiche == null) {
+                return $this->redirect(['controller'=>'Fiches','action' => 'index']);
+            }
+            else {
+                return $this->redirect(['controller'=>'Fiches','action' => 'view', $idfiche]);
+            }
+        }
     }
 }

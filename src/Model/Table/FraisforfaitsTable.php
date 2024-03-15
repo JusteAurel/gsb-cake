@@ -7,6 +7,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Phinx\Db\Table\ForeignKey;
 
 /**
  * Fraisforfaits Model
@@ -40,7 +41,7 @@ class FraisforfaitsTable extends Table
         parent::initialize($config);
 
         $this->setTable('fraisforfaits');
-        $this->setDisplayField('montant');
+        $this->setDisplayField('label');
         $this->setPrimaryKey('id');
 
         $this->hasMany('Lignefraisforfaits', [
@@ -57,16 +58,16 @@ class FraisforfaitsTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
+            ->scalar('label')
+            ->maxLength('label', 250)
+            ->requirePresence('label', 'create')
+            ->notEmptyString('label');
+            
+        $validator
             ->scalar('montant')
             ->maxLength('montant', 250)
             ->requirePresence('montant', 'create')
             ->notEmptyString('montant');
-
-        $validator
-            ->scalar('fraisforfait')
-            ->maxLength('fraisforfait', 250)
-            ->requirePresence('fraisforfait', 'create')
-            ->notEmptyString('fraisforfait');
 
         return $validator;
     }

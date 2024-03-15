@@ -14,7 +14,7 @@
                     <th><?= $this->Paginator->sort('id') ?></th>
                     <th><?= $this->Paginator->sort('date') ?></th>
                     <th><?= $this->Paginator->sort('montant') ?></th>
-                    <th><?= $this->Paginator->sort('fraishf') ?></th>
+                    <th><?= $this->Paginator->sort('label') ?></th>
                     <th class="actions"><?= __('Actions') ?></th>
                 </tr>
             </thead>
@@ -24,7 +24,7 @@
                     <td><?= $this->Number->format($lignefraishf->id) ?></td>
                     <td><?= h($lignefraishf->date) ?></td>
                     <td><?= h($lignefraishf->montant) ?></td>
-                    <td><?= h($lignefraishf->fraishf) ?></td>
+                    <td><?= h($lignefraishf->label) ?></td>
                     <td class="actions">
                         <?= $this->Html->link(__('View'), ['action' => 'view', $lignefraishf->id]) ?>
                         <?= $this->Html->link(__('Edit'), ['action' => 'edit', $lignefraishf->id]) ?>

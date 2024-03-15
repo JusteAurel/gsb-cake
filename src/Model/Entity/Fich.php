@@ -12,7 +12,6 @@ use Cake\ORM\Entity;
  * @property string $user_id
  * @property int $etat_id
  * @property string $moisannee
- * @property string $nbjustificatifs
  * @property string $montantvalide
  * @property string $datemodif
  *
@@ -36,7 +35,6 @@ class Fich extends Entity
         'user_id' => true,
         'etat_id' => true,
         'moisannee' => true,
-        'nbjustificatifs' => true,
         'montantvalide' => true,
         'datemodif' => true,
         'user' => true,

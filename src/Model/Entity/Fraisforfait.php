@@ -9,7 +9,7 @@ use Cake\ORM\Entity;
  * Fraisforfait Entity
  *
  * @property int $id
- * @property string $montant
+ * @property int $montant
  * @property string $fraisforfait
  *
  * @property \App\Model\Entity\Lignefraisforfait[] $lignefraisforfaits
@@ -26,6 +26,7 @@ class Fraisforfait extends Entity
      * @var array<string, bool>
      */
     protected $_accessible = [
+        'label'=>true,
         'montant' => true,
         'fraisforfait' => true,
         'lignefraisforfaits' => true,

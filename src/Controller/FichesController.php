@@ -24,7 +24,6 @@ class FichesController extends AppController
         $username = $identity["username"];
         $list = $this->Fiches->find('all', ['conditions' => ['user_id' => $iduser]])->contain(['Etats', 'Users']); //Le contain permet de charger le nom d'user et l'etat
 
-
         $this->set('list', $list);
 
         $this->set('showHeader', true);
@@ -46,12 +45,18 @@ class FichesController extends AppController
      */
     public function view($id = null)
     {
+        $identity = $this->getRequest()->getAttribute('identity');
+        $identity = $identity ?? [];
+        $role = $identity['role'];
+
         $this->set('showHeader', true);
         $fich = $this->Fiches->get($id, [
-            'contain' => ['Users', 'Etats', 'Lignefraisforfaits', 'Lignefraishfs'],
+        'contain' => ['Users', 'Etats', 'Lignefraisforfaits', 'Lignefraishfs', 'Lignefraisforfaits.Fraisforfaits'],
         ]);
-
-        $this->set(compact('fich'));
+        
+        //Récupérer toutes les informations de la table FraisForfait et les mettre dans la variable $fraisforfait
+        $fraisforfait = $this->Fiches->Lignefraisforfaits->Fraisforfaits->find('All');
+        $this->set(compact('fich', 'fraisforfait', 'role'));
     }
 
     /**
@@ -60,22 +65,34 @@ class FichesController extends AppController
      * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
      */
     public function add()
-    {
+    {        
+        $identity = $this->getRequest()->getAttribute('identity');
+        $identity = $identity ?? [];
+        $iduser = $identity["id"];
+
         $fich = $this->Fiches->newEmptyEntity();
         if ($this->request->is('post')) {
             $fich = $this->Fiches->patchEntity($fich, $this->request->getData());
-            if ($this->Fiches->save($fich)) {
-                $this->Flash->success(__('The fich has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+            $fich->user_id = $iduser;
+            $fich->etat_id = 1;
+
+            if ($this->Fiches->save($fich)) {
+                $this->Flash->success(__('Votre fiche a été ajoutée'));
+                $idfiche = $fich->id;
+
+                return $this->redirect(['controller'=>'Lignefraisforfaits', 'action'=>'create', $idfiche]);
             }
-            $this->Flash->error(__('The fich could not be saved. Please, try again.'));
+            $this->Flash->error(__('La fiche ne peut être ajoutée. Veuillez réessayer !'));
         }
+
         $users = $this->Fiches->Users->find('list', ['limit' => 200])->all();
         $etats = $this->Fiches->Etats->find('list', ['limit' => 200])->all();
-        $lignefraisforfaits = $this->Fiches->Lignefraisforfaits->find('list', ['limit' => 200])->all();
+        $lignefraisforfaits = $this->Fiches->Lignefraisforfaits->Fraisforfaits->find('list', ['limit' => 200])->all();
         $lignefraishfs = $this->Fiches->Lignefraishfs->find('list', ['limit' => 200])->all();
-        $this->set(compact('fich', 'users', 'etats', 'lignefraisforfaits', 'lignefraishfs'));
+
+
+        $this->set(compact('fich', 'users', 'etats', 'lignefraisforfaits', 'lignefraishfs', 'iduser'));
     }
 
     /**
@@ -105,7 +122,6 @@ class FichesController extends AppController
         $lignefraishfs = $this->Fiches->Lignefraishfs->find('list', ['limit' => 200])->all();
         $this->set(compact('fich', 'users', 'etats', 'lignefraisforfaits', 'lignefraishfs'));
     }
-
     /**
      * Delete method
      *
@@ -118,9 +134,9 @@ class FichesController extends AppController
         $this->request->allowMethod(['post', 'delete']);
         $fich = $this->Fiches->get($id);
         if ($this->Fiches->delete($fich)) {
-            $this->Flash->success(__('The fich has been deleted.'));
+            $this->Flash->success(__('La fiche a été correctement supprimé'));
         } else {
-            $this->Flash->error(__('The fich could not be deleted. Please, try again.'));
+            $this->Flash->error(__("La Fiche n'a pas pu être supprimée"));
         }
 
         return $this->redirect(['action' => 'index']);
@@ -131,14 +147,62 @@ class FichesController extends AppController
         $identity = $this->getRequest()->getAttribute('identity');
         $identity = $identity ?? [];
         $iduser = $identity["id"];
+        $role = $identity['role'];
 
         $this->set('showHeader', true);
 
         $this->paginate = [
-            'contain' => ['Etat', 'Users'],
+            'contain' => ['Etats', 'Users'],
         ];
         $fiches = $this->paginate($this->Fiches);
 
-        $this->set(compact('fiches'));
+        $this->set(compact('fiches', 'role'));
+    }
+
+    //Permet à l'utilisateur de cloturer sa fiche
+    public function cloturefich($id = null, $idetat = null)
+    {
+        if ($idetat == 1) {
+            $fich = $this->Fiches;
+            $query=$fich->query();
+            $query->update()
+            ->set(['etat_id' => 2])
+            ->where(['id' => $id])
+            ->execute();
+            $this->Flash->success(__('Fiche Cloturée !'));
+        }
+        else {
+            $this->Flash->error(__("La Fiche n'a pas pu être cloturée. Si la fiche a déjà été cloturée ou qu'elle a été validée, vous ne pouvez plus la cloturer."));
+        }
+        return $this->redirect(['action' => 'view', $id]);
+    }
+
+    //Une fois cloturée, le comptable peut voir la fiche et la valider.
+    public function validatefich($id = null, $idetat = null)
+    {
+        if ($idetat == 2) {
+            $fich = $this->Fiches;
+            $query=$fich->query();
+            $query->update()
+            ->set(['etat_id' => 3])
+            ->where(['id' => $id])
+            ->execute();
+            $this->Flash->success(__('Fiche Validée !'));
+            return $this->redirect(['action' => 'infomail', $id]);
+        }
+        else{
+            $this->Flash->error(__("La Fiche n'a pas pu être validée. La fiche n'a peut être pas encore été cloturée, ou a déjà été validée."));
+            return $this->redirect(['action' => 'view', $id]);
+        }
+    }
+
+    //Envoie de mail de confirmation
+    public function infomail($id = null)
+    {
+        $mailer = new Mailer('default');
+        $mailer->setFrom(['moi@example.com' => 'Mon Site'])
+        ->setTo('toi@example.com')
+        ->setSubject('À propos')
+        ->send('Mon message');
     }
 }

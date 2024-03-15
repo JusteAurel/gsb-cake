@@ -53,6 +53,7 @@ class PagesController extends AppController
         $this->set('showHeader', true);
         $this->set('iduser', $iduser); // Pass $iduser to the view
         $this->set('username', $username); //Récupération du nom d'utilisateur
+
         
         if (!$path) {
             return $this->redirect('/');

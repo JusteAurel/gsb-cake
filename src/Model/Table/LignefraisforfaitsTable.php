@@ -48,6 +48,7 @@ class LignefraisforfaitsTable extends Table
             'foreignKey' => 'fraisforfait_id',
             'joinType' => 'INNER',
         ]);
+
         $this->belongsToMany('Fiches', [
             'foreignKey' => 'lignefraisforfait_id',
             'targetForeignKey' => 'fiche_id',
@@ -72,6 +73,7 @@ class LignefraisforfaitsTable extends Table
             ->maxLength('quantite', 250)
             ->requirePresence('quantite', 'create')
             ->notEmptyString('quantite');
+
 
         return $validator;
     }

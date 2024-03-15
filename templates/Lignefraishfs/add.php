@@ -20,7 +20,7 @@
                 <?php
                     echo $this->Form->control('date');
                     echo $this->Form->control('montant');
-                    echo $this->Form->control('fraishf');
+                    echo $this->Form->control('label');
                     echo $this->Form->control('fiches._ids', ['options' => $fiches]);
                 ?>
             </fieldset>

@@ -29,7 +29,7 @@ class Lignefraishf extends Entity
     protected $_accessible = [
         'date' => true,
         'montant' => true,
-        'fraishf' => true,
+        'label' => true,
         'fiches' => true,
     ];
 }
