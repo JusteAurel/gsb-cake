@@ -227,7 +227,7 @@ return [
      * 'YourTransport.php', where 'Your' is the name of the transport.
      */
     'EmailTransport' => [
-        // Exemple de configuration de Mail
+            // Exemple de configuration de Mail
         'default' => [
             'className' => 'Mail',
         ],
@@ -236,11 +236,20 @@ return [
             'host' => 'smtp.gmail.com',
             'port' => 587,
             'username' => 'aurelienwiart24@gmail.com',
-            'password' => 'MP-1ND6EG8Zb',
+            'password' => 'xlfu pyyw ywiq oqqn',
             'className' => 'Smtp',
             'tls' => true
         ]
     ],
+    'Email' => [
+        'default' => [
+            'transport' => 'default',  // Utiliser la configuration par défaut
+            'from' => 'aurelienwiart24@gmail.com',
+            'charset' => 'utf-8',
+            'headerCharset' => 'utf-8',
+        ]
+    ],
+    
 
     /*
      * Email delivery profiles
@@ -251,17 +260,17 @@ return [
      * easier. Each profile accepts a number of keys. See `Cake\Mailer\Email`
      * for more information.
      */
-    'Email' => [
-        'default' => [
-            'transport' => 'default',
-            'from' => 'aurelienwiart24@gmail.com',
-            /*
-             * Will by default be set to config value of App.encoding, if that exists otherwise to UTF-8.
-             */
-            //'charset' => 'utf-8',
-            //'headerCharset' => 'utf-8',
-        ],
-    ],
+    // 'Email' => [
+    //     'default' => [
+    //         'transport' => 'default',
+    //         'from' => 'aurelienwiart24@gmail.com',
+    //         /*
+    //          * Will by default be set to config value of App.encoding, if that exists otherwise to UTF-8.
+    //          */
+    //         //'charset' => 'utf-8',
+    //         //'headerCharset' => 'utf-8',
+    //     ],
+    // ],
 
     /*
      * Connection information used by the ORM to connect

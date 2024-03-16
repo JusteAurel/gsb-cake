@@ -161,7 +161,7 @@ return [
             'role' => 'comptable',
             'plugin' => Null,
             'controller' => 'Fiches',
-            'action' => ['view', 'list', 'validatefich'],
+            'action' => ['view', 'list', 'validatefich', 'infomail'],
         ],
     ]
 ];

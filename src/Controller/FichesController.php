@@ -2,6 +2,9 @@
 declare(strict_types=1);
 
 namespace App\Controller;
+use Cake\Mailer\Email;
+use Cake\Mailer\Mailer;
+use Cake\Mailer\TransportFactory;
 use CakeDC\Auth\Plugin;
 
 /**
@@ -188,7 +191,7 @@ class FichesController extends AppController
             ->where(['id' => $id])
             ->execute();
             $this->Flash->success(__('Fiche Validée !'));
-            return $this->redirect(['action' => 'infomail', $id]);
+            return $this->redirect(['action' => 'view', $id]);
         }
         else{
             $this->Flash->error(__("La Fiche n'a pas pu être validée. La fiche n'a peut être pas encore été cloturée, ou a déjà été validée."));
@@ -197,12 +200,25 @@ class FichesController extends AppController
     }
 
     //Envoie de mail de confirmation
-    public function infomail($id = null)
-    {
-        $mailer = new Mailer('default');
-        $mailer->setFrom(['moi@example.com' => 'Mon Site'])
-        ->setTo('toi@example.com')
-        ->setSubject('À propos')
-        ->send('Mon message');
-    }
+    // public function infomail($id = null, $nfiche = null)
+    // {
+    //     $identity = $this->getRequest()->getAttribute('identity');
+    //     $identity = $identity ?? [];
+    //     $nom = $identity['last_name'];
+
+    //     // Mailer::deliver('aurelienwiart154@gmail.com');
+
+    //     // // $mailer = new Mailer();
+    //     // // $mailer->setProfile('default');
+
+    //     $mailer = new Mailer('default');
+    //     $mailer->setFrom(['aurelienwiart24@gmail.com' => 'Mon Site'])
+    //     ->setTo('aurelienwiart154@gmail.com')
+    //     ->setSubject('Informations Validation Fiche')
+    //     ->setViewVars("Fiche Validée")
+    //     ->deliver();
+
+    //     return $this->redirect(['action' => 'view', $nfiche]);
+        
+    // }
 }
