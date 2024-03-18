@@ -11,6 +11,21 @@ namespace App\Controller;
  */
 class LignefraisforfaitsController extends AppController
 {
+    //Permet de mettre à jour la date de modification
+    public function updatedatemodif($id = null)
+    {
+        $date=date('y/m/d H:i:s');
+        $fich = $this->Lignefraisforfaits->Fiches;
+
+        $query=$fich->query();
+        $query->update()
+        ->set(['datemodif'=>$date])
+        ->where(['id' => $id])
+        ->execute();
+
+        return $this->redirect(['controller'=>'Fiches', 'action' => 'view', $id]);
+    }
+
     /**
      * Index method
      *
@@ -74,7 +89,9 @@ class LignefraisforfaitsController extends AppController
             if ($this->Lignefraisforfaits->save($lignefraisforfait)) {
                 $this->Flash->success(__('Fiche de frais correctement créée'));
 
-                return $this->redirect(['controller'=>'Fiches','action' => 'view', $id]);
+                // Appel de la fonctionnupdatedatemodif() pour changer la date de modification et aller directement dans la page view
+                return $this->updatedatemodif($id);
+
             }
             $this->Flash->error(__("La fiche de frais n'a pas pu être créée. Veuillez recommencer"));
         }
@@ -102,7 +119,9 @@ class LignefraisforfaitsController extends AppController
                 if ($this->Lignefraisforfaits->save($lignefraisforfait)) {
                     $this->Flash->success(__('Frais correctement enregistré'));
     
-                    return $this->redirect(['controller'=>'Fiches','action' => 'view', $idfiche]);
+                    // Appel de la fonctionnupdatedatemodif() pour changer la date de modification et aller directement dans la page view
+                    return $this->updatedatemodif($idfiche);
+
                 }
                 $this->Flash->error(__("Le frais n'a pas pu être correctement enregistré. Veuillez recommencer"));
             }
@@ -135,11 +154,12 @@ class LignefraisforfaitsController extends AppController
             $lignefraisforfait = $this->Lignefraisforfaits->get($id);
             if ($this->Lignefraisforfaits->delete($lignefraisforfait)) {
                 $this->Flash->success(__('Frais correctement supprimé'));
+                // Appel de la fonctionnupdatedatemodif() pour changer la date de modification et aller directement dans la page view
+                return $this->updatedatemodif($idfiche);
             } else {
                 $this->Flash->error(__("Le frais n'a pas pu être correctement supprimé. Veuillez réessayer !"));
+                return $this->redirect(['controller'=>'Fiches', 'action' => 'view', $idfiche]);
             }
-
-            return $this->redirect(['controller'=>'Fiches', 'action' => 'view', $idfiche]);
         }
         else {
             $this->Flash->error(__("Impossible de supprimer une fiche cloturée !"));

@@ -18,7 +18,7 @@
                     <th><?= $this->Paginator->sort('id') ?></th>
                     <th><?= $this->Paginator->sort('Utilisateur') ?></th>
                     <th><?= $this->Paginator->sort('Etat') ?></th>
-                    <th><?= $this->Paginator->sort('Mois Année') ?></th>
+                    <th><?= $this->Paginator->sort('Date') ?></th>
                     <th><?= $this->Paginator->sort('Montant Valide') ?></th>
                     <th><?= $this->Paginator->sort('Date Modif') ?></th>
                     <th class="actions"><?= __('Actions') ?></th>
@@ -33,7 +33,7 @@
                                 <td><?= $this->Number->format($fich->id) ?></td>
                                 <td><?= $fich->has('user') ? $this->Html->link($fich->user->username, ['controller' => 'Users', 'action' => 'view', $fich->user->id]) : '' ?></td>
                                 <td><?= $fich->has('etat') ? $this->Html->link($fich->etat->etat, ['controller' => 'Etats', 'action' => 'view', $fich->etat->id]) : '' ?></td>
-                                <td><?= h($fich->moisannee) ?></td>
+                                <td><?= h($fich->date) ?></td>
                                 <td><?= h($fich->montantvalide) ?></td>
                                 <td><?= h($fich->datemodif) ?></td>
                                 <td class="actions">

@@ -1,0 +1,17 @@
+/* Style de la page d'accueil */
+
+.lien{
+    background-color: #d33c43;
+    color: whitesmoke;
+    padding: 1%;
+    margin: 2%;
+    /* text-align: center; */
+    display: inline-flex;
+    /* flex-direction: column; */
+    border-radius: 13px;
+}
+
+.lien:hover {
+    background-color: rgba(148, 147, 147, 0.848);
+    color: gray;
+}

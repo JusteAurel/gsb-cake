@@ -49,11 +49,12 @@ class PagesController extends AppController
         $identity = $identity ?? [];
         $iduser = $identity["id"];
         $username = $identity["username"];
+        $role = $identity['role'];
         
         $this->set('showHeader', true);
-        $this->set('iduser', $iduser); // Pass $iduser to the view
-        $this->set('username', $username); //Récupération du nom d'utilisateur
-
+        $this->set('iduser', $iduser); // Récupération de l'id de l'utilisateur sur la vue
+        $this->set('username', $username); //Récupération du nom d'utilisateur sur la vue
+        $this->set('role', $role); // Récupérer le rôle permettra d'afficher ou non des boutons en fonction du role de l'utilisateur
         
         if (!$path) {
             return $this->redirect('/');

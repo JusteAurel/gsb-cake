@@ -72,13 +72,14 @@ class FichesController extends AppController
         $identity = $this->getRequest()->getAttribute('identity');
         $identity = $identity ?? [];
         $iduser = $identity["id"];
+        $date = date('d/m/y H:i:s');
 
         $fich = $this->Fiches->newEmptyEntity();
         if ($this->request->is('post')) {
             $fich = $this->Fiches->patchEntity($fich, $this->request->getData());
 
             $fich->user_id = $iduser;
-            $fich->etat_id = 1;
+            $fich->etat_id=1;
 
             if ($this->Fiches->save($fich)) {
                 $this->Flash->success(__('Votre fiche a été ajoutée'));
@@ -86,16 +87,14 @@ class FichesController extends AppController
 
                 return $this->redirect(['controller'=>'Lignefraisforfaits', 'action'=>'create', $idfiche]);
             }
-            $this->Flash->error(__('La fiche ne peut être ajoutée. Veuillez réessayer !'));
+            $this->Flash->error(__('La fiche ne peut pas être ajoutée. Veuillez réessayer !'));
         }
 
         $users = $this->Fiches->Users->find('list', ['limit' => 200])->all();
         $etats = $this->Fiches->Etats->find('list', ['limit' => 200])->all();
-        $lignefraisforfaits = $this->Fiches->Lignefraisforfaits->Fraisforfaits->find('list', ['limit' => 200])->all();
-        $lignefraishfs = $this->Fiches->Lignefraishfs->find('list', ['limit' => 200])->all();
 
 
-        $this->set(compact('fich', 'users', 'etats', 'lignefraisforfaits', 'lignefraishfs', 'iduser'));
+        $this->set(compact('fich', 'users', 'etats', 'iduser', 'date'));
     }
 
     /**
@@ -105,26 +104,41 @@ class FichesController extends AppController
      * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function edit($id = null)
-    {
-        $fich = $this->Fiches->get($id, [
-            'contain' => ['Lignefraisforfaits', 'Lignefraishfs'],
-        ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $fich = $this->Fiches->patchEntity($fich, $this->request->getData());
-            if ($this->Fiches->save($fich)) {
-                $this->Flash->success(__('The fich has been saved.'));
+    public function edit($id = null, $etat_id = null)
+    {   
+        $identity = $this->getRequest()->getAttribute('identity');
+        $identity = $identity ?? [];
+        $date = date('d/m/y H:i:s');
 
-                return $this->redirect(['action' => 'index']);
+        if ($etat_id == 1) {
+            $fich = $this->Fiches->get($id, [
+                'contain' => ['Lignefraisforfaits', 'Lignefraishfs'],
+            ]);
+            if ($this->request->is(['patch', 'post', 'put'])) {
+                $fich = $this->Fiches->patchEntity($fich, $this->request->getData());
+
+                $fich->datemodif = $date;
+                if ($this->Fiches->save($fich)) {
+                    $this->Flash->success(__('Fiche de Frais modifié avec succès'));
+    
+                    return $this->redirect(['action' => 'index']);
+                }
+                $this->Flash->error(__('Votre fiche n\a pas pu être enregistrée. Veuillez Réessayer !'));
             }
-            $this->Flash->error(__('The fich could not be saved. Please, try again.'));
+
+            $users = $this->Fiches->Users->find('list', ['limit' => 200])->all();
+            $etats = $this->Fiches->Etats->find('list', ['limit' => 200])->all();
+            $lignefraisforfaits = $this->Fiches->Lignefraisforfaits->find('list', ['limit' => 200])->all();
+            $lignefraishfs = $this->Fiches->Lignefraishfs->find('list', ['limit' => 200])->all();
+
+            $this->set(compact('fich', 'users', 'etats', 'lignefraisforfaits', 'lignefraishfs', 'date'));
         }
-        $users = $this->Fiches->Users->find('list', ['limit' => 200])->all();
-        $etats = $this->Fiches->Etats->find('list', ['limit' => 200])->all();
-        $lignefraisforfaits = $this->Fiches->Lignefraisforfaits->find('list', ['limit' => 200])->all();
-        $lignefraishfs = $this->Fiches->Lignefraishfs->find('list', ['limit' => 200])->all();
-        $this->set(compact('fich', 'users', 'etats', 'lignefraisforfaits', 'lignefraishfs'));
+        else{
+            $this->Flash->error(__('Vous ne pouvez pas modifier une fiche déjà cloturée'));
+            return $this->redirect(['action' => 'index']);
+        }
     }
+
     /**
      * Delete method
      *
@@ -132,16 +146,20 @@ class FichesController extends AppController
      * @return \Cake\Http\Response|null|void Redirects to index.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function delete($id = null)
+    public function delete($id = null, $etat_id = null)
     {
-        $this->request->allowMethod(['post', 'delete']);
-        $fich = $this->Fiches->get($id);
-        if ($this->Fiches->delete($fich)) {
-            $this->Flash->success(__('La fiche a été correctement supprimé'));
-        } else {
-            $this->Flash->error(__("La Fiche n'a pas pu être supprimée"));
+        if ($etat_id == 1) {
+            $this->request->allowMethod(['post', 'delete']);
+            $fich = $this->Fiches->get($id);
+            if ($this->Fiches->delete($fich)) {
+                $this->Flash->success(__('La fiche a été correctement supprimé'));
+            } else {
+                $this->Flash->error(__("La Fiche n'a pas pu être supprimée"));
+            }
         }
-
+        else {
+            $this->Flash->error(__("Vous ne pouvez pas supprimer une fiche déjà cloturée."));
+        }
         return $this->redirect(['action' => 'index']);
     }
 
@@ -162,6 +180,21 @@ class FichesController extends AppController
         $this->set(compact('fiches', 'role'));
     }
 
+    //Permet de mettre à jour la date de modification
+    public function updatedatemodif($id = null)
+    {
+        $date=date('y/m/d H:i:s');
+        $fich = $this->Fiches;
+
+        $query=$fich->query();
+        $query->update()
+        ->set(['datemodif'=>$date])
+        ->where(['id' => $id])
+        ->execute();
+        
+        return $this->redirect(['action' => 'view', $id]);
+    }
+
     //Permet à l'utilisateur de cloturer sa fiche
     public function cloturefich($id = null, $idetat = null)
     {
@@ -173,11 +206,12 @@ class FichesController extends AppController
             ->where(['id' => $id])
             ->execute();
             $this->Flash->success(__('Fiche Cloturée !'));
+            return $this->updatedatemodif($id);
         }
         else {
             $this->Flash->error(__("La Fiche n'a pas pu être cloturée. Si la fiche a déjà été cloturée ou qu'elle a été validée, vous ne pouvez plus la cloturer."));
+            return $this->redirect(['action' => 'view', $id]);
         }
-        return $this->redirect(['action' => 'view', $id]);
     }
 
     //Une fois cloturée, le comptable peut voir la fiche et la valider.
@@ -191,7 +225,7 @@ class FichesController extends AppController
             ->where(['id' => $id])
             ->execute();
             $this->Flash->success(__('Fiche Validée !'));
-            return $this->redirect(['action' => 'view', $id]);
+            return $this->updatedatemodif($id);
         }
         else{
             $this->Flash->error(__("La Fiche n'a pas pu être validée. La fiche n'a peut être pas encore été cloturée, ou a déjà été validée."));

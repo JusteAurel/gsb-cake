@@ -50,7 +50,7 @@ class FichesTable extends Table
         parent::initialize($config);
 
         $this->setTable('fiches');
-        $this->setDisplayField('moisannee');
+        $this->setDisplayField('date');
         $this->setPrimaryKey('id');
 
         $this->belongsTo('Users', ['className' => '\CakeDC\Users\Model\Table\UsersTable', 
@@ -91,10 +91,10 @@ class FichesTable extends Table
             ->notEmptyString('etat_id');
 
         $validator
-            ->scalar('moisannee')
-            ->maxLength('moisannee', 100)
-            ->requirePresence('moisannee', 'create')
-            ->notEmptyString('moisannee');
+            ->scalar('date')
+            ->maxLength('date', 100)
+            ->requirePresence('date', 'create')
+            ->notEmptyString('date');
 
         $validator
             ->scalar('montantvalide')

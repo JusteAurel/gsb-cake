@@ -21,7 +21,7 @@ $idetat = $fich->etat_id;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>Fiche <?= h($fich->moisannee)?> </title>
+    <title>Fiche <?= h($fich->date)?> </title>
 </head>
 <body>
     <div class="row">
@@ -33,7 +33,7 @@ $idetat = $fich->etat_id;
                     <?php
                     if ($idetat == 1) { ?>
                         <?= $this->Html->link(__('Modifier Fiche'), ['action' => 'edit', $fich->id], ['class' => 'side-nav-item']) ?>
-                        <?= $this->Form->postLink(__('Supprimer Fiche'), ['action' => 'delete', $fich->id], ['confirm' => __('Voulez vous réellement supprimer la fiche n°{0}?', $fich->id), 'class' => 'side-nav-item']) ?>
+                        <?= $this->Form->postLink(__('Supprimer Fiche'), ['action' => 'delete', $fich->id, $fich->etat_id], ['confirm' => __('Voulez vous réellement supprimer la fiche n°{0}?', $fich->id), 'class' => 'side-nav-item']) ?>
                     <?php             } ?>
                     <?= $this->Html->link(__('Liste Fiches'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
                     <?= $this->Html->link(__('Nouvelle Fiche'), ['action' => 'add'], ['class' => 'side-nav-item']) ?>
@@ -44,7 +44,7 @@ $idetat = $fich->etat_id;
         ?>
         <div class="column-responsive column-80">
             <div class="fiches view content">
-                <h3><?= h($fich->moisannee) ?></h3>
+                <h3><?= h($fich->date) ?></h3>
                 <?php
                 //Si il s'agit d'un comptable et que la fiche est en état "cloturée", alors le bouton de validation est visible 
                 if ($role == "comptable" && $idetat == 2) { 
@@ -66,10 +66,6 @@ $idetat = $fich->etat_id;
                         <th><?= __('Etat de la fiche') ?></th>
                         <td><?= $fich->has('etat') ? $this->Html->link($fich->etat->etat, ['controller' => 'Etats', 'action' => 'view', $fich->etat->id]) : '' ?></td>
                     </tr>
-                    <!-- <tr>
-                        <th><?= __('Montant Valide') ?></th>
-                        <td><?= h($fich->montantvalide) ?></td>
-                    </tr> -->
                 </table>
                 <div class="related">
                     <h4><?= __('Ligne Frais Forfaits') ?></h4>
@@ -85,8 +81,8 @@ $idetat = $fich->etat_id;
                                 <th><?= __('Id') ?></th>
                                 <th><?= __('Nom') ?></th>
                                 <th><?= __('Quantité') ?></th>
-                                <th><?= __('Montant') ?></th>
-                                <th><?= __('Montant Total') ?></th>
+                                <th><?= __('Montant Unitaire') ?></th>
+                                <th><?= __('Total') ?></th>
                                 <?php
                                 if ($role == "user" && $idetat == 1) { ?>
                                     <th class="actions"><?= __('Actions') ?></th>
@@ -124,7 +120,7 @@ $idetat = $fich->etat_id;
                     <h4><?= __('Ligne Frais Hors Forfaits',) ?></h4>
                     <?php
                                 if ($role == "user" && $idetat == 1) { ?>
-                                    <?= $this->Html->link('Ajouter un frais Hors forfait', ['plugin' => NULL, 'controller' => 'Lignefraishfs', 'action' => 'create', $fich->id, $idfiche], ['class' => 'button float-right']); ?>
+                                    <?= $this->Html->link('Ajouter un frais Hors forfait', ['plugin' => NULL, 'controller' => 'Lignefraishfs', 'action' => 'create', $idfiche], ['class' => 'button float-right']); ?>
                                 <?php
                                 } 
                                 ?>

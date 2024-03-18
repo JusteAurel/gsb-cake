@@ -34,7 +34,7 @@ class Fich extends Entity
     protected $_accessible = [
         'user_id' => true,
         'etat_id' => true,
-        'moisannee' => true,
+        'date' => true,
         'montantvalide' => true,
         'datemodif' => true,
         'user' => true,

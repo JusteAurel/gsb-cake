@@ -12,10 +12,10 @@
             <thead>
                 <tr>
                     <th><?= $this->Paginator->sort('id') ?></th>
-                    <th><?= $this->Paginator->sort('etat_id') ?></th>
-                    <th><?= $this->Paginator->sort('moisannee') ?></th>
-                    <th><?= $this->Paginator->sort('montantvalide') ?></th>
-                    <th><?= $this->Paginator->sort('datemodif') ?></th>
+                    <th><?= $this->Paginator->sort('Etat') ?></th>
+                    <th><?= $this->Paginator->sort('Date') ?></th>
+                    <th><?= $this->Paginator->sort('Montant Valide') ?></th>
+                    <th><?= $this->Paginator->sort('Date Modif') ?></th>
                     <th class="actions"><?= __('Actions') ?></th>
                 </tr>
             </thead>
@@ -24,13 +24,17 @@
                 <tr>
                     <td><?= $this->Number->format($fich->id) ?></td>
                     <td><?= $fich->has('etat') ? $this->Html->link($fich->etat->etat, ['controller' => 'Etats', 'action' => 'view', $fich->etat->id]) : '' ?></td>
-                    <td><?= h($fich->moisannee) ?></td>
+                    <td><?= h($fich->date) ?></td>
                     <td><?= h($fich->montantvalide) ?></td>
                     <td><?= h($fich->datemodif) ?></td>
                     <td class="actions">
                         <?= $this->Html->link(__('Voir'), ['action' => 'view', $fich->id]) ?>
-                        <?= $this->Html->link(__('Modifier'), ['action' => 'edit', $fich->id]) ?>
-                        <?= $this->Form->postLink(__('Supprimer'), ['action' => 'delete', $fich->id], ['confirm' => __('Êtes vous sûr de vouloir supprimer cette fiche ?', $fich->id)]) ?>
+                    <?php
+                        if ($fich->etat_id == 1) {
+                            echo $this->Html->link(__('Modifier'), ['action' => 'edit', $fich->id, $fich->etat_id]);
+                            echo $this->Form->postLink(__('Supprimer'), ['action' => 'delete', $fich->id, $fich->etat_id], ['confirm' => __('Êtes vous sûr de vouloir supprimer cette fiche ?', $fich->id)]);
+                        }
+                    ?>
                     </td>
                 </tr>
                 <?php endforeach; ?>

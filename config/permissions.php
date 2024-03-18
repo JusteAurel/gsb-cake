@@ -140,28 +140,28 @@ return [
             'role' => 'user',
             'plugin' => Null,
             'controller' => 'Fiches',
-            'action' => ['add', 'edit', 'index', 'view', 'cloturefich'],
+            'action' => ['add', 'edit', 'index', 'view', 'cloturefich', 'delete', 'updatedatemodif'],
         ],
         //Permissions aux utilisateurs pour la création, modification et visualisation des lignes de frais
         [
             'role' => 'user',
             'plugin' => Null,
             'controller' => 'Lignefraisforfaits',
-            'action' => ['create', 'edit', 'view', 'delete'],
+            'action' => ['create', 'edit', 'view', 'delete', 'updatedatemodif'],
         ],
         //Permissions aux utilisateurs pour la création, modification et visualisation, et de suppression des lignes de frais hors forfaits
         [
             'role' => 'user',
             'plugin' => Null,
             'controller' => 'Lignefraishfs',
-            'action' => ['create', 'edit', 'view', 'delete'],
+            'action' => ['create', 'edit', 'view', 'delete', 'updatedatemodif'],
         ],
         //Le comptable a accés à toutes les informations des fiches 
         [
             'role' => 'comptable',
             'plugin' => Null,
             'controller' => 'Fiches',
-            'action' => ['view', 'list', 'validatefich', 'infomail'],
+            'action' => ['view', 'list', 'validatefich', 'infomail', 'updatedatemodif'],
         ],
     ]
 ];

@@ -22,13 +22,11 @@
                 <legend><?= __('Ajouter une Fiche') ?></legend>
                 <?php
                 //Ne prends pas en compte Utilisateur et etat --> Field "user_id" not default value
-                    echo $this->Form->control('Utilisateur', ['options' => $users, 'value'=> $iduser ,'disabled'=> true]);
-                    echo $this->Form->control('Etat de la Fiche', ['options' => $etats, 'value' => 1, 'disabled' => true]);
-                    echo $this->Form->control('moisannee');
-                    echo $this->Form->control('montantvalide');
-                    echo $this->Form->control('datemodif');
-                    // echo $this->Form->control('Frais Forfait', ['options' => $lignefraisforfaits]);
-                    // echo $this->Form->control('Frais Hors Forfait', ['options' => $lignefraishfs]);
+                    $this->Form->control('user_id', ['options' => $users, 'value'=> $iduser]);
+                    $this->Form->control('etat_id', ['options' => $etats, 'value' => 1]);
+                    echo $this->Form->control('date', ['label'=>'Date de Fiche']);
+                    echo $this->Form->control('montantvalide', ['label'=>'Montant Valide']);
+                    $this->Form->control('datemodif', ['label'=>'Date de Modif', 'value'=>$date]);
                 ?>
             </fieldset>
             <?= $this->Form->button(__('Envoyer')) ?>

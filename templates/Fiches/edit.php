@@ -26,13 +26,10 @@
             <fieldset>
                 <legend><?= __('Editer une fiche') ?></legend>
                 <?php
-                    echo $this->Form->hidden('user_id', ['label'=>'Utilisateur', 'options' => $users]);
-                    echo $this->Form->hidden('etat_id', ['options' => $etats]);
-                    echo $this->Form->control('moisannee', ['label'=>'Mois Année']);
+                    $this->Form->control('user_id', ['label'=>'Utilisateur', 'options' => $users]);
+                    $this->Form->control('etat_id', ['options' => $etats]);
                     echo $this->Form->control('montantvalide', ['label'=>'Montant Valide']);
-                    echo $this->Form->control('datemodif', ['label'=>'Date de modification']);
-                    //echo $this->Form->control('lignefraisforfaits._ids', ['options' => $lignefraisforfaits]);
-                    //echo $this->Form->control('lignefraishfs._ids', ['options' => $lignefraishfs]);
+                    $this->Form->control('datemodif', ['label'=>'Date de modification', 'value'=>$date]);
                 ?>
             </fieldset>
             <?= $this->Form->button(__('Valider')) ?>
